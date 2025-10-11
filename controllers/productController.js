@@ -18,7 +18,7 @@ async function getItemById(req, res) {
 
 async function deleteItem(req, res) {
   const { itemId, userId, imagePublicId } = req.body;
-  
+  console.log("Deleting item with ID:", itemId, "for user ID:", userId, "and imagePublicId:", imagePublicId);
   try {
     // Delete from Cloudinary
     await cloudinary.uploader.destroy(imagePublicId);
