@@ -7,6 +7,8 @@ const { default: mongoose, get } = require('mongoose');
 //Local Modules
 const authRoutes = require('./routes/authRoutes');
 const productRoutes = require('./routes/productRoutes');
+const groceryRoutes = require('./routes/groceryRoutes');
+const groceryAuthRoutes = require('./routes/groceryAuthRoutes');
 
 const app = express();
 
@@ -32,6 +34,8 @@ app.use(cors()); // Allows all origins (only for dev use)
 
 app.use('/api/auth', authRoutes);
 app.use('/api', productRoutes);
+app.use('/api/grocery', groceryRoutes); 
+app.use('/api/groceryAuth', groceryAuthRoutes);
 
 
 const DB_PATH =  process.env.DB_PATH ;
