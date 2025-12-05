@@ -5,7 +5,6 @@ const Shop = require("../models/shop");
 const getItemsByShop = async (req, res) => {
   try {
     let { shopId } = req.params;
-    console.log("Fetching items for shopId:", shopId);
     // Check valid shop
     shopId = shopId.replace(/"/g, "").trim(); // remove quotes + spaces
     const shop = await Shop.findById(shopId).populate("items");
@@ -28,10 +27,13 @@ const getItemsByShop = async (req, res) => {
 
 async function addShopItem(req, res){
   let { shopId } = req.params;
-  console.log("Adding item to shopId:", req.body);
+  
   shopId = shopId.replace(/"/g, "").trim(); // remove quotes + spaces
-  const { name, mrp, price, image, weight } = req.body;
-
+  const { name, mrp, price, weight, shopName, category } = req.body;
+  const image = req.file?.path; // Cloudinary URL
+  if (!image) {
+    return res.status(400).json({ message: "Image upload failed" });
+  }
   const shopExists = await Shop.findById(shopId);
 
   if (!shopExists) {
@@ -44,6 +46,8 @@ async function addShopItem(req, res){
     price,
     image,
     weight,
+    shopName,
+    category,
     shopId
   });
 
@@ -53,6 +57,39 @@ async function addShopItem(req, res){
 
   res.json({ message: "Item added successfully", item });
 }
+
+// UPDATE ITEM
+const updateShopItem = async (req, res) => {
+  try {
+    const { itemId } = req.params;
+    const updates = req.body; // {name, price, mrp, weight,category, image}
+    
+     // If new image uploaded → save new URL
+    if (req.file) {
+      updates.image = req.file?.path;
+    }
+
+    // 1️⃣ Find and update item
+    const updatedItem = await Item.findByIdAndUpdate(
+      itemId,
+      updates,
+      { new: true } // return updated document
+    );
+
+    if (!updatedItem) {
+      return res.status(404).json({ message: "Item not found" });
+    }
+
+    res.json({
+      message: "Item updated successfully",
+      item: updatedItem
+    });
+
+  } catch (err) {
+    console.error("UPDATE ITEM ERROR:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
 
 // DELETE ITEM
  const deleteShopItem = async (req, res) => {
@@ -80,33 +117,7 @@ async function addShopItem(req, res){
   }
 };
 
-// UPDATE ITEM
-const updateShopItem = async (req, res) => {
-  try {
-    const { itemId } = req.params;
-    const updates = req.body; // {name, price, mrp, weight, image}
 
-    // 1️⃣ Find and update item
-    const updatedItem = await Item.findByIdAndUpdate(
-      itemId,
-      updates,
-      { new: true } // return updated document
-    );
-
-    if (!updatedItem) {
-      return res.status(404).json({ message: "Item not found" });
-    }
-
-    res.json({
-      message: "Item updated successfully",
-      item: updatedItem
-    });
-
-  } catch (err) {
-    console.error("UPDATE ITEM ERROR:", err);
-    res.status(500).json({ message: "Server error" });
-  }
-};
 
 
 

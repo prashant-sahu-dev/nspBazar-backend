@@ -6,7 +6,8 @@ const itemSchema = new mongoose.Schema({
   price: Number,
   weight: String,
   image: String,
-
+  shopName: String,
+  category: String,
   // item belongs to which shop?
   shopId: {
     type: mongoose.Schema.Types.ObjectId,

@@ -13,7 +13,6 @@ async function signup(req, res){
     }
 
     const user = new User({name, email, password}) ;
-    console.log("User created successfully:", user);
     await user.save() ;
      
     const token = jwt.sign({id: user._id, role: user.role}, process.env.JWT_SECRET_KEY, {expiresIn: '1h'}) ;
@@ -47,7 +46,6 @@ async function login(req, res) {
 }
 
 async function googleLogin(req, res) {
-    console.log("Google login request body:", req.body);
        try{
     
         const { email, name } = req.body;

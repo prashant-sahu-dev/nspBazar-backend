@@ -8,9 +8,9 @@ const router = express.Router();
 router.post("/admin/shop", addShop);
 
 router.get("/:shopId/items", getItemsByShop);     // items of 1 shop
-router.post("/:shopId/item", addShopItem);
+router.post("/:shopId/item", upload.single("image"), addShopItem);
 router.delete("/item/:itemId", deleteShopItem);
-router.put("/item/:itemId", updateShopItem);
+router.put("/item/:itemId",upload.single("image"), updateShopItem);
 router.get("/shops", getAllShops);
 
 module.exports = router;
