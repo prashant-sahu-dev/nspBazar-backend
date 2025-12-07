@@ -26,7 +26,6 @@ const productSchema = mongoose.Schema({
      category: {
         type: String,
         required: true,
-        enum: ['book', 'electronics', 'furniture', 'property', 'clothing', 'automobiles', 'other'],
         lowercase: true,
      },
      description: {
@@ -38,6 +37,10 @@ const productSchema = mongoose.Schema({
         type: Number,
         required: true,
         mini: 0,
+     },
+     seller:{
+       type: String,
+       required: true
      },
      image: {
         type: String,
@@ -53,6 +56,7 @@ const productSchema = mongoose.Schema({
         type: Number,
         required: true
      },
+    
      postedAt: {
         type: Date,
         default: Date.now,
